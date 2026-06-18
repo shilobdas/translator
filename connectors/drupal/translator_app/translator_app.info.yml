@@ -1,0 +1,6 @@
+name: Translator App
+type: module
+description: Sends Drupal entity HTML to the Translator App API and provides an optional TMGMT translator plugin.
+package: Web services
+core_version_requirement: ^10 || ^11
+configure: translator_app.settings

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.git/
+.venv/
+venv/
+smoke_test_translation.db
+backend/translation.db

@@ -1,0 +1,16 @@
+translator_app.settings:
+  path: '/admin/config/services/translator-app'
+  defaults:
+    _form: '\Drupal\translator_app\Form\TranslatorAppSettingsForm'
+    _title: 'Translator App'
+  requirements:
+    _permission: 'administer site configuration'
+
+translator_app.translate_node:
+  path: '/admin/config/services/translator-app/translate-node/{node}'
+  defaults:
+    _controller: '\Drupal\translator_app\Controller\TranslatorAppController::translateNode'
+    _title: 'Translate node with Translator App'
+  requirements:
+    _permission: 'administer nodes'
+    node: '\d+'
