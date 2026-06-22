@@ -39,7 +39,7 @@ def transcribe_audio(filename: str, content: bytes, content_type: str) -> Speech
         response = requests.post(
             endpoint,
             files=files,
-            timeout=float(os.getenv("SPEECH_TIMEOUT_SECONDS", "30")),
+            timeout=float(os.getenv("SPEECH_TIMEOUT_SECONDS", "300")),
         )
     except requests.RequestException as exc:
         raise SpeechServiceError(f"Speech-to-text request failed: {exc}") from exc
@@ -76,7 +76,7 @@ def synthesize_speech(text: str, language: str) -> SpeechAudioResult | None:
         response = requests.post(
             endpoint,
             json={"text": text, "language": language},
-            timeout=float(os.getenv("SPEECH_TIMEOUT_SECONDS", "30")),
+            timeout=float(os.getenv("SPEECH_TIMEOUT_SECONDS", "300")),
         )
     except requests.RequestException as exc:
         raise SpeechServiceError(f"Text-to-speech request failed: {exc}") from exc

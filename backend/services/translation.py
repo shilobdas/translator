@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import os
-
+import time
 import requests
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
@@ -413,15 +413,26 @@ def _translate_with_gemini(
         "x-goog-api-key": api_key,
     }
 
-    try:
-        response = requests.post(
-            f"{base_url}/models/{selected_model}:generateContent",
-            json=payload,
-            headers=headers,
-            timeout=_request_timeout(),
-        )
-    except requests.RequestException as exc:
-        raise TranslationServiceError(f"Gemini translation request failed: {exc}") from exc
+    max_retries = 3
+    delay_seconds = 2
+
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(
+                f"{base_url}/models/{selected_model}:generateContent",
+                json=payload,
+                headers=headers,
+                timeout=_request_timeout(),
+            )
+        except requests.RequestException as exc:
+            raise TranslationServiceError(f"Gemini translation request failed: {exc}") from exc
+
+        if response.status_code == 503 and attempt < max_retries - 1:
+            time.sleep(delay_seconds)
+            delay_seconds *= 2  # exponential backoff: 2s, 4s, 8s
+            continue
+
+        break
 
     data = _parse_json_response(response, "Gemini")
     translated_text = _extract_gemini_text(data)
@@ -437,7 +448,6 @@ def _translate_with_gemini(
         model=selected_model,
         usage_tokens=usage_tokens if isinstance(usage_tokens, int) else None,
     )
-
 
 # --------------------------------------------------------------------------- #
 # LibreTranslate                                                                #

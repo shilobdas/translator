@@ -557,31 +557,43 @@ def render_sidebar():
         st.markdown("#### Internal")
         if st.button("Internal Translate", use_container_width=True):
             st.session_state.page = "internal_translate"
+            st.rerun()
         if st.button("Documents", use_container_width=True):
             st.session_state.page = "internal_documents"
+            st.rerun()
         if st.button("Excel", use_container_width=True):
             st.session_state.page = "internal_excel"
+            st.rerun()
         st.markdown("#### Existing Tools")
         if st.button("Translate", use_container_width=True):
             st.session_state.page = "translate"
+            st.rerun()
         if st.button("My History", use_container_width=True):
             st.session_state.page = "history"
+            st.rerun()
         if st.button("Profile", use_container_width=True):
             st.session_state.page = "profile"
+            st.rerun()
         if st.session_state.is_admin:
             st.markdown("---")
             if st.button("Admin Overview", use_container_width=True):
                 st.session_state.page = "admin_overview"
+                st.rerun()
             if st.button("Admin Users", use_container_width=True):
                 st.session_state.page = "admin_users"
+                st.rerun()
             if st.button("Admin History", use_container_width=True):
                 st.session_state.page = "admin_history"
+                st.rerun()
             if st.button("Admin Usage", use_container_width=True):
                 st.session_state.page = "admin_usage"
+                st.rerun()
             if st.button("Internal Usage", use_container_width=True):
                 st.session_state.page = "internal_usage"
+                st.rerun()
             if st.button("Integrations", use_container_width=True):
                 st.session_state.page = "integrations"
+                st.rerun()
         st.markdown("---")
         st.button("Logout", on_click=logout, use_container_width=True)
 
@@ -723,11 +735,29 @@ def render_translate_page():
     st.header("Translate")
     render_provider_notice()
     mode = st.radio("Mode", ["Text", "Voice"], horizontal=True)
-    col1, col2 = st.columns(2)
+
+    if "translate_source_lang" not in st.session_state:
+        st.session_state.translate_source_lang = "en"
+    if "translate_target_lang" not in st.session_state:
+        st.session_state.translate_target_lang = "es"
+
+    col1, col_swap, col2 = st.columns([5, 1, 5])
     with col1:
-        source_lang = language_select("Source language", "en")
+        source_lang = language_select("Source language", st.session_state.translate_source_lang)
+        st.session_state.translate_source_lang = source_lang
+    with col_swap:
+        st.write("")
+        st.write("")
+        if st.button("⇄", use_container_width=True):
+            st.session_state.translate_source_lang, st.session_state.translate_target_lang = (
+                st.session_state.translate_target_lang,
+                st.session_state.translate_source_lang,
+            )
+            st.rerun()
     with col2:
-        target_lang = language_select("Target language", "es")
+        target_lang = language_select("Target language", st.session_state.translate_target_lang)
+        st.session_state.translate_target_lang = target_lang
+
     provider, model = translation_provider_select()
 
     if mode == "Text":
@@ -741,13 +771,7 @@ def render_translate_page():
         include_audio = st.checkbox("Return translated audio when a TTS provider is configured")
         if st.button("Translate Voice", type="primary"):
             data, error = perform_voice_translation(
-                transcript,
-                source_lang,
-                target_lang,
-                provider,
-                model,
-                audio_file,
-                include_audio,
+                transcript, source_lang, target_lang, provider, model, audio_file, include_audio,
             )
             render_translation_result(data, error)
 
@@ -1144,6 +1168,8 @@ def main():
         render_internal_documents_page()
     elif st.session_state.page == "internal_excel":
         render_internal_excel_page()
+    elif st.session_state.page == "translate":
+        render_translate_page()
     elif st.session_state.page == "history":
         render_history_page()
     elif st.session_state.page == "profile":
