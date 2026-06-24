@@ -834,6 +834,7 @@ It sends a translation instruction as `system_instruction` and the user text in 
 ### LibreTranslate Provider
 
 Use a LibreTranslate-compatible server:
+<<<<<<< HEAD
 ### Running LibreTranslate Locally With Docker
 
 Start the LibreTranslate container with only the languages you need:
@@ -849,6 +850,9 @@ For a detached (background) run:
 ```bash
 docker run -d -p 5000:5000 libretranslate/libretranslate --load-only en,es,fr,de,ar,bn,zh,hi,it,pt
 ```
+=======
+
+>>>>>>> 61fdeafb474200c6f3df7aa60572dcfb3f203aa4
 ```env
 TRANSLATION_PROVIDER=libretranslate
 LIBRETRANSLATE_URL=http://127.0.0.1:5000
@@ -2520,4 +2524,8 @@ Recommended next upgrades:
 - Django package with installable `pyproject.toml`.
 - Production migrations with Alembic.
 "# Translator-App" 
+<<<<<<< HEAD
+"# translator" 
+=======
+>>>>>>> 61fdeafb474200c6f3df7aa60572dcfb3f203aa4
 "# translator" 
