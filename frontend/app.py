@@ -597,34 +597,10 @@ def render_sidebar():
         st.markdown("---")
         st.button("Logout", on_click=logout, use_container_width=True)
 
-<<<<<<< HEAD
 def render_translate_page():
     st.header("Translate")
     st.caption(f"Provider: {os.getenv('TRANSLATION_PROVIDER', 'default')}")  # which provider is running
     mode = st.radio(...)
-=======
-
-def render_provider_notice():
-    providers, error = fetch_provider_status()
-    if error:
-        st.warning(error)
-        return
-    translation = providers["translation"]
-    speech = providers["speech_to_text"]
-    tts = providers["text_to_speech"]
-    if translation["demo_mode"]:
-        st.warning("Translation is running in demo mode.")
-    with st.expander("Provider status", expanded=False):
-        st.json(
-            {
-                "translation": translation,
-                "translation_options": providers.get("translation_options", []),
-                "speech_to_text": speech,
-                "text_to_speech": tts,
-            }
-        )
-
->>>>>>> 61fdeafb474200c6f3df7aa60572dcfb3f203aa4
 
 def render_internal_provider_health():
     health, error = fetch_internal_provider_health()
@@ -740,10 +716,6 @@ def render_internal_excel_page():
 
 def render_translate_page():
     st.header("Translate")
-<<<<<<< HEAD
-=======
-    render_provider_notice()
->>>>>>> 61fdeafb474200c6f3df7aa60572dcfb3f203aa4
     mode = st.radio("Mode", ["Text", "Voice"], horizontal=True)
 
     if "translate_source_lang" not in st.session_state:
@@ -771,21 +743,13 @@ def render_translate_page():
     provider, model = translation_provider_select()
 
     if mode == "Text":
-<<<<<<< HEAD
         text = st.text_area("Text",height=180,placeholder="Enter text to translate here...")
-=======
-        text = st.text_area("Text", "Hello, how are you?", height=180)
->>>>>>> 61fdeafb474200c6f3df7aa60572dcfb3f203aa4
         if st.button("Translate Text", type="primary"):
             data, error = perform_text_translation(text, source_lang, target_lang, provider, model)
             render_translation_result(data, error)
     else:
         audio_file = st.file_uploader("Audio file", type=["wav", "mp3", "m4a", "ogg"])
-<<<<<<< HEAD
         transcript = st.text_area("Transcript", height=140,placeholder="Enter transcript text here...")
-=======
-        transcript = st.text_area("Transcript", "Hello, how are you?", height=140)
->>>>>>> 61fdeafb474200c6f3df7aa60572dcfb3f203aa4
         include_audio = st.checkbox("Return translated audio when a TTS provider is configured")
         if st.button("Translate Voice", type="primary"):
             data, error = perform_voice_translation(
