@@ -1,0 +1,5 @@
+translator_app.settings:
+  title: 'Translator App'
+  description: 'Configure Translator App API integration.'
+  route_name: translator_app.settings
+  parent: system.admin_config_services
